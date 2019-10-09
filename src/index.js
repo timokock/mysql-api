@@ -2,6 +2,10 @@ const express = require("express");
 const morgan = require("morgan");
 const exphbs = require("express-handlebars");
 const path = require("path");
+const flash = require("connect-flash");
+const session = require("express-session");
+const MySQLStore = require('express-mysql-session')
+const { database } = require('./keys')
 //initializations
 
 const app = express();
@@ -22,20 +26,30 @@ app.engine(
 app.set("view engine", ".hbs");
 
 //middlewares
-
+app.use(
+  session({
+    secret: "faztmysqlnodesession",
+    resave: false,
+    saveUnitialized: false,
+    store: new MySQLStore(database)
+  })
+);
 app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(flash());
 app.use((req, res, next) => {
+  app.locals.success = req.flash("success");
+
   next();
 });
 
 // global variables
 
 //routes
-app.use(require('./routes/index'));
-app.use(require('./routes/authentication'));
-app.use('/links', require('./routes/links'));
+app.use(require("./routes/index"));
+app.use(require("./routes/authentication"));
+app.use("/links", require("./routes/links"));
 
 // public
 app.use(express.static(path.join(__dirname, "public")));

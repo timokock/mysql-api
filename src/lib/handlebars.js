@@ -2,7 +2,7 @@ const { format } = require('timeago.js')
 
 const helpers = {}
 
-helpers.timeago = () =>{
+helpers.timeago = (timestamp) =>{
     return format(timestamp);
 }
 
