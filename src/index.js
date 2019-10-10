@@ -4,14 +4,13 @@ const exphbs = require("express-handlebars");
 const path = require("path");
 const flash = require("connect-flash");
 const session = require("express-session");
-const MySQLStore = require('express-mysql-session')
-const { database } = require('./keys')
-const passport = require('passport')
+const MySQLStore = require("express-mysql-session");
+const { database } = require("./keys");
+const passport = require("passport");
 //initializations
 
 const app = express();
-require('./lib/passport')
-
+require("./lib/passport");
 
 // settings
 app.set("port", process.env.PORT || 4000);
@@ -41,14 +40,17 @@ app.use(morgan("dev"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
+
+// global variables
 app.use((req, res, next) => {
   app.locals.success = req.flash("success");
   app.locals.message = req.flash("message");
+  app.locals.user = req.user;
   next();
 });
-app.use(passport.initialize())
-app.use(passport.session())
-// global variables
+
 
 //routes
 app.use(require("./routes/index"));

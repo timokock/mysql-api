@@ -68,8 +68,8 @@ passport.use(
 
 // Para guardar el usuario dentro de la sesión
 // Cuando serializamos guardamos el id
-passport.serializeUser((usr, done) => {
-  done(null, usr.id);
+passport.serializeUser((user, done) => {
+  done(null, user.id);
 });
 
 // Usa el id para tomar los datos almacenados
