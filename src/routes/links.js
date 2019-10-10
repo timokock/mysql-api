@@ -15,7 +15,8 @@ router.post("/add", isLoggedIn, async (req, res) => {
   const newLink = {
     title,
     url,
-    description
+    description,
+    user_id: req.user.id
   };
 
   req.flash("success", "Link saved successfully");
@@ -24,7 +25,7 @@ router.post("/add", isLoggedIn, async (req, res) => {
 });
 
 router.get("/", isLoggedIn, async (req, res) => {
-  const links = await pool.query("SELECT * FROM links");
+  const links = await pool.query("SELECT * FROM links WHERE user_id = ?", [req.user.id]);
 
   console.log(links);
 
